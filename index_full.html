@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task-Context-Aware Imitation Learning with 
+        Vision-language Guided Inference for Robotic Multi-Task Disassembly</title>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120436611-3"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-120436611-3');
+    </script>
+    <script type="text/javascript">google.load("jquery", "1.3.2");</script>
+    <script src="video.js"></script>
+
+    <link rel="StyleSheet" href="style.css" type="text/css"/>
+    <style>
+      .header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #fff;
+      }
+
+      .usc-logo {
+        height: 120px;
+        width: auto;
+      }
+
+      .header .title {
+        font-size: 24px;
+        margin: 0;
+        color: #333;
+        font-family: Arial, sans-serif;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div class="header">
+      <img src="images/usc-logo.png" alt="USC Logo" class="usc-logo">
+    </div>
+
+    <center>
+      <h1 class="title">Task-Context-Aware Imitation Learning with 
+        Vision-language Guided Inference for Robotic Multi-Task Disassembly</h1>
+    </center>
+
+    <br>
+    <table align=center width=1000px>
+      <tr>
+        <td align=center width=150px>
+          <center>
+            <span class="author">Jeon Ho Kang</a></span>
+          </center>
+        </td>
+        <td align=center width=150px>
+          <center>
+            <span class="author">Igal Tamarkin</a></span>
+          </center>
+        </td>
+        <td align=center width=150px>
+          <center>
+            <span class="author">Ian Novales</a></span>
+          </center>
+        </td>
+        <td align=center width=190px>
+          <center>
+            <span class="author">Satyandra K. Gupta</a></span>
+          </center>
+        </td>
+      </tr>
+    </table>
+
+    <table align=center width=700px>
+      <tr>
+        <td align=center width=100px>
+          <center>
+            <span class="author">University of Southern California</span>
+          </center>
+        </td>
+      </tr>
+    </table>
+
+    <div class="container">
+      <table align=center width=60%>
+        <tr>
+          <td align=center width=33%>
+            <center>
+              <img class="layered-paper" width=15% src="images/pg4.png"/>
+              <p class="sectitle"><a href="">Paper (Coming Soon)</a></p>
+            </center>
+          </td>
+          <td align=center width=33%>
+            <center>
+              <img width=20% src="images/github.png"/>
+              <p class="sectitle"><a href="">Code (Coming Soon)</a></p>
+            </center>
+          </td>
+          <!-- <td align=center width=33%>
+            <center>
+              <img width=25% src="images/youtube-logo.png"/>
+              <p class="sectitle"><a href="">Video (Coming Soon)</a></p>
+            </center>
+          </td> -->
+        </tr>
+      </table>      
+    </div>
+
+    <div class="container" id="abstract">
+      <center><h2 class="sectitle">Abstract</h2></center>
+      <p class="text">
+        Recent advances in imitation learning have enabled
+        robots to execute an increasingly diverse set of manipulation
+        skills. However, real-world manufacturing assembly and disassembly
+        require long-horizon, multi-task operation, where robots
+        must identify and switch between context-appropriate skills. A
+        single scene may contain multiple task objectives—such as BNC,
+        terminal block, USB, and other connectors—requiring the robot
+        to reason over several possible goals within the same observation
+        space. Moreover, each connector type demands distinct motion
+        strategies (e.g., wiggling, prying, rotating to unlock), making it
+        difficult for policies trained solely on visual and force observations
+        to reliably generalize. Humans naturally overcome this complexity
+        by segmenting long-horizon demonstrations into meaningful
+        sub-task modes and using high-level reasoning, often expressed in
+        language, to guide sequencing and execution. Motivated by this
+        insight, we tackle two key challenges: (1) improving policy efficiency
+        and robustness by structuring manipulation into language-guided
+        sub-task modes, and (2) enabling a high-level Vision-Language
+        Model (VLM) to select the appropriate sub-task based
+        on natural-language prompts and scene context. Furthermore,
+        we introduce an adaptive modality-weighting framework that
+        dynamically adjusts the contribution of visual and force cues
+        depending on the current sub-task mode.
+      </p>
+    </div>
+    <div class="divider"></div>
+
+    <div class="container demo-videos">
+      <center><h2 class="sectitle">Our Method</h2></center>
+      <div class="video-row">
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/demos/dsub.mov" type="video/mp4">
+          </video>
+          <p class="caption">D-Sub Removal</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/demos/usb.mov" type="video/mp4">
+          </video>
+          <p class="caption">USB Removal</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/demos/bnc_labeled.mov" type="video/mp4">
+          </video>
+          <p class="caption">BNC Removal</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/demos/terminal_block.mov" type="video/mp4">
+          </video>
+          <p class="caption">Terminal Block Removal</p>
+        </div>
+        <div class="video-case video-center">
+        <video controls playsinline autoplay muted loop>
+          <source src="videos/demo/demos/end_to_end_demo.mov" type="video/mp4">
+        </video>
+        <p class="caption">End-to-End Removal</p>
+      </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="container" id="failure-cases">
+      <!-- <center><h2 class="sectitle">Representative Failure Cases (Benchmark Methods)</h2></center> -->
+      <center><h2 class="sectitle">Temporal Freezing Effect</h2></center>
+      <!-- <div class="container">
+        <img src="images/temporal_bottleneck.png"></img>
+      </div> -->
+      <div class="failure-grid">
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/freezing_effect/dsub_freezing_grrasp.mov" type="video/mp4">
+          </video>
+          <p class="caption">D-Sub Freezing during Grasp</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/freezing_effect/bnc_freezing_grasp_cut.mov" type="video/mp4">
+          </video>
+          <p class="caption">BNC Freezing during Grasp</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/freezing_effect/terminal_grasp_freezing.mov" type="video/mp4">
+          </video>
+          <p class="caption">Terminal Block Freezing during Grasp</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/freezing_effect/terminal_freezing_pull.mov" type="video/mp4">
+          </video>
+          <p class="caption">Terminal Block Freezing during Pull</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/freezing_effect/usb_freezing_grasp.mov" type="video/mp4">
+          </video>
+          <p class="caption">USB Freezing during Grasp</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/freezing_effect/usb_freezing_pull.mov" type="video/mp4">
+          </video>
+          <p class="caption">USB Freezing during Pull</p>
+        </div>
+        <div class="video-case video-center">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/freezing_effect/usb_etoe_freezing.mov" type="video/mp4">
+          </video>
+          <p class="caption">USB Freezing End-to-End</p>
+        </div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    
+    <div class="container" id="edge-cases">
+      <center><h2 class="sectitle">Edge Cases</h2></center>
+      <div class="failure-grid">
+        <!-- First Row: 2 Videos -->
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/edge_cases/double_dsub.mov" type="video/mp4">
+          </video>
+          <p class="caption">Double D-Sub Removal</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/edge_cases/double_usb.mov" type="video/mp4">
+          </video>
+          <p class="caption">Double USB Removal</p>
+        </div>
+    
+        <!-- Second Row: 2 Videos -->
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/edge_cases/double_terminal.mov" type="video/mp4">
+          </video>
+          <p class="caption">Double Terminal Block Removal</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/demo/edge_cases/double_bnc.mov" type="video/mp4">
+          </video>
+          <p class="caption">Double BNC Removal</p>
+        </div>
+    
+        <!-- Third Row: 2 Videos -->
+        <!-- <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/RAL_Edge_cases/silver_c.mp4" type="video/mp4">
+          </video>
+          <p class="caption">Filler</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/Silver_D.mp4" type="video/mp4">
+          </video>
+          <p class="caption">Filler</p>
+        </div> -->
+    
+        <!-- Fourth Row: Centered Video -->
+        <!-- <div class="video-case video-center">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/RAL_Edge_cases/C_series.mp4" type="video/mp4">
+          </video>
+          <p class="caption">Filler</p>
+        </div> -->
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="container" id="hw_setup">
+      <center><h2 class="sectitle">Hardware Setup</h2></center>
+
+      <table class="hw-table">
+        <thead>
+          <tr>
+            <th>Item Number</th>
+            <th>Description</th>
+            <th>Manufacturer</th>
+            <th>MPN</th>
+            <th>Quantity</th>
+            <th>Preview</th> <!-- This column will have buttons -->
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr>
+            <td>Item 1</td>
+            <td>D-Sub Interface Mount 
+              <a href="https://example.com" target="_blank">Learn more</a>
+            </td>
+            <td>#####</td>
+            <td>#####</td>
+            <td>#####</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View</button>
+                <img src="images/pic1.jpg" class="hover-preview">
+                <div class="hover-caption">
+                  Text for Image 1.
+                </div>
+              </div>
+            </td>
+          </tr> -->
+
+          <!-- Item 1 -->
+          <tr>
+            <td>1</td>
+            <td>D-Sub Interface Mount</td>
+            <td>3D Printed</td>
+            <td>
+              <a href="STL/D_sub_interface.STL" target="_blank">D_sub_interface.STL</a>
+            </td>
+            <td>2</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_1.jpg" class="hover-preview">
+                <div class="hover-caption">D-Sub Interface Mount</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 2 -->
+          <tr>
+            <td>2</td>
+            <td>USB Interface Mount</td>
+            <td>3D Printed</td>
+            <td>
+              <a href="STL/usb_interface.STL" target="_blank">usb_interface.STL</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_2.jpg" class="hover-preview">
+                <div class="hover-caption">USB Interface Mount</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 3 -->
+          <tr>
+            <td>3</td>
+            <td>BNC Interface Mount</td>
+            <td>3D Printed</td>
+            <td>
+              <a href="STL/bnc_interface.STL" target="_blank">bnc_interface.STL</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_3.jpg" class="hover-preview">
+                <div class="hover-caption">BNC Interface Mount</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 4 -->
+          <tr>
+            <td>4</td>
+            <td>Terminal Block Interface Mount</td>
+            <td>3D Printed</td>
+            <td>
+              <a href="STL/terminal_block_interface.STL" target="_blank">terminal_block_interface.STL</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_4.jpg" class="hover-preview">
+                <div class="hover-caption">Terminal Block Interface Mount</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 5 -->
+          <tr>
+            <td>5</td>
+            <td>Plate Standoff, 1"</td>
+            <td>3D Printed</td>
+            <td>
+              <a href="STL/standoff.STL" target="_blank">standoff.STL</a>
+            </td>
+            <td>4</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_5.jpg" class="hover-preview">
+                <div class="hover-caption">Plate Standoff, 1"</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 6 -->
+          <tr>
+            <td>6</td>
+            <td>D-Sub, Backshell</td>
+            <td>JAE Electronics</td>
+            <td>
+              <a href="https://www.digikey.com/en/products/detail/jae-electronics/DB-C8-J10-B5-1R/25675336" 
+              target="_blank">DB-C8-J10-B5-1R</a>
+            </td>
+            <td>2</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_6.jpg" class="hover-preview">
+                <div class="hover-caption">D-Sub Backshell</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 7 -->
+          <tr>
+            <td>7</td>
+            <td>D-Sub, Male</td>
+            <td>NorComp Inc.</td>
+            <td>
+              <a href="https://www.digikey.com/en/products/detail/norcomp-inc/171-025-103L001/858135" 
+              target="_blank">171-025-103L001</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_7.jpg" class="hover-preview">
+                <div class="hover-caption">D-Sub Male</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 8 -->
+          <tr>
+            <td>8</td>
+            <td>D-Sub, Female</td>
+            <td>TE Connectivity AMP</td>
+            <td>
+              <a href="https://www.digikey.com/en/products/detail/te-connectivity-amp-connectors/207463-1/30296" 
+              target="_blank">207463-1</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_8.jpg" class="hover-preview">
+                <div class="hover-caption">D-Sub Female</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 9 -->
+          <tr>
+            <td>9</td>
+            <td>USB Connector, Male</td>
+            <td>MISUMI</td>
+            <td>
+              <a href="https://us.misumi-ec.com/vona2/detail/110400191850/?HissuCode=U02-AM-BM-0.5&srsltid=AfmBOop1KGK53D_tXaV_sbscTHhmr-l2w1vLkzLX49Q6dPv51enkZlOQ&tab=productSpecifications&Page=1" 
+              target="_blank">U02-AM-BM-0.5</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_9.jpg" class="hover-preview">
+                <div class="hover-caption">USB Connector, Male</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 10 -->
+          <tr>
+            <td>10</td>
+            <td>USB Passthrough, Panel Mount, Female</td>
+            <td>MISUMI</td>
+            <td>
+              <a href="https://us.misumi-ec.com/vona2/detail/110500069440/?searchFlow=results2products&KWSearch=panel+mount+usb&list=PageSearchResult&Tab=codeList&curSearch=%7B%22field%22%3A%22%40search%22%2C%22seriesCode%22%3A%22110500069440%22%2C%22innerCode%22%3A%22%22%2C%22sort%22%3A1%2C%22specSortFlag%22%3A0%2C%22allSpecFlag%22%3A0%2C%22page%22%3A1%2C%22pageSize%22%3A60%2C%22stockItemFlag%22%3A%221%22%2C%2200000053100%22%3A%22b%22%2C%2200000055753%22%3A%22b%22%2C%22fixedInfo%22%3A%22innerCode%3AMDM00002767905%7C4%22%7D&CategorySpec=00000055753%3A%3Ab%0900000053100%3A%3Ab&Page=1" 
+              target="_blank">U09-AF-AF-B</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_10.jpg" class="hover-preview">
+                <div class="hover-caption">USB Passthrough, Panel Mount</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 11 -->
+          <tr>
+            <td>11</td>
+            <td>BNC, Male</td>
+            <td>RF Solutions</td>
+            <td>
+              <a href="https://www.digikey.com/en/products/detail/rf-solutions/ADP-SMBM-BNCM/5845789" 
+              target="_blank">ADP-SMBM-BNCM</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_11.jpg" class="hover-preview">
+                <div class="hover-caption">BNC Male</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 12 -->
+          <tr>
+            <td>12</td>
+            <td>BNC, Female</td>
+            <td>Pomona Electronics</td>
+            <td>
+              <a href="https://www.digikey.com/en/products/detail/pomona-electronics/2451A/6125643?gclsrc=aw.ds&gad_source=1&gad_campaignid=20622663732&gclid=CjwKCAjwlaTGBhANEiwAoRgXBQRwT8dxcKD7v8P-RZwycoeXxncmGwtVtlBi0rYCz83TZh92uK1_pRoC2kcQAvD_BwE" 
+              target="_blank">2451A</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_12.jpg" class="hover-preview">
+                <div class="hover-caption">BNC Female</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 13 -->
+          <tr>
+            <td>13</td>
+            <td>Terminal Block, Male</td>
+            <td>MISUMI</td>
+            <td>
+              <a href="https://us.misumi-ec.com/vona2/detail/110400196570/?HissuCode=MCON-E10-SP&srsltid=AfmBOooBR515pS8j84jFUWj1XdbbgErOfeREBj5YqsEp4QZS-HhmFGpA&Tab=wysiwyg_area_1&curSearch=%7b%22field%22%3a%22%40search%22%2c%22seriesCode%22%3a%22110400196570%22%2c%22innerCode%22%3a%22%22%2c%22sort%22%3a1%2c%22specSortFlag%22%3a0%2c%22allSpecFlag%22%3a0%2c%22page%22%3a1%2c%22pageSize%22%3a%2260%22%2c%2200000027448%22%3a%22a%22%2c%2200000027449%22%3a%22mig00000001439167%22%2c%22fixedInfo%22%3a%22innerCode%3aMDM00002631354%7c15%22%7d"
+              target="_blank">MCON-E10-SP</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_13.jpg" class="hover-preview">
+                <div class="hover-caption">Terminal Block, Male</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 14 -->
+          <tr>
+            <td>14</td>
+            <td>Terminal Block, Female</td>
+            <td>MISUMI</td>
+            <td>
+              <a href="https://us.misumi-ec.com/vona2/detail/110400196570/?HissuCode=MCON-E10-SS&PNSearch=MCON-E10-SS&searchFlow=results2type&KWSearch=MCON-E10-SS"
+              target="_blank">MCON-E10-SS</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_14.jpg" class="hover-preview">
+                <div class="hover-caption">Terminal Block, Female</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 15 -->
+          <tr>
+            <td>15</td>
+            <td>Fixture Plate, 10×10×1/2", 1/4"-20 Thread</td>
+            <td>JMSMSH</td>
+            <td>
+              <a href="https://a.co/d/fyyOrWJ"
+              target="_blank">10" x 10" x 1/2"</a>
+            </td>
+            <td>1</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_15.jpg" class="hover-preview">
+                <div class="hover-caption">Fixture Plate</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 16 -->
+          <tr>
+            <td>16</td>
+            <td>Screw, Socket Head, 1/4"-20, 0.75" L</td>
+            <td>McMaster-Carr</td>
+            <td>
+              <a href="https://www.mcmaster.com/92196A540/"
+              target="_blank">92196A540</a>
+            </td>
+            <td>8</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_16.jpg" class="hover-preview">
+                <div class="hover-caption">1/4"-20 Socket Head Screw</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 17 -->
+          <tr>
+            <td>17</td>
+            <td>Screw, Socket Head, M3, 35mm L</td>
+            <td>McMaster-Carr</td>
+            <td>
+              <a href="https://www.mcmaster.com/91290A135/"
+              target="_blank">91290A135</a>
+            </td>
+            <td>6</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_17.jpg" class="hover-preview">
+                <div class="hover-caption">M3 Socket Head Screw (35mm)</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 18 -->
+          <tr>
+            <td>18</td>
+            <td>Screw, Socket Head, M3, 16mm L</td>
+            <td>McMaster-Carr</td>
+            <td>
+              <a href="https://www.mcmaster.com/91290A120/"
+              target="_blank">91290A120</a>
+            </td>
+            <td>6</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_18.jpg" class="hover-preview">
+                <div class="hover-caption">M3 Socket Head Screw (16mm)</div>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Item 19 -->
+          <tr>
+            <td>19</td>
+            <td>Nut, Hex, Thin, M3</td>
+            <td>McMaster-Carr</td>
+            <td>
+              <a href="https://www.mcmaster.com/90695A033/"
+              target="_blank">90695A033</a>
+            </td>
+            <td>12</td>
+            <td>
+              <div class="button-wrapper">
+                <button class="preview-btn">View Part</button>
+                <img src="images/BOM/item_19.jpg" class="hover-preview">
+                <div class="hover-caption">M3 Thin Hex Nut</div>
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+      
+      <!-- Side-by-side BOM Images -->
+      <div class="bottom-images">
+        <div class="image-case">
+          <img src="images/BOM/BOM_1_1.jpg" class="bom-image">
+          <p class="caption">Full Task Board (dissambled)</p>
+        </div>
+
+        <div class="image-case">
+          <img src="images/BOM/BOM_2_1.jpg" class="bom-image">
+          <p class="caption">Full Task Board (assembled)</p>
+        </div>
+      </div>
+
+      <!-- <div id="hw_setup_grid">
+        <div class="column">
+          <h3 class="column-title">Acquired Hardware</h3>
+
+          <div class="button-wrapper">
+            <button class="preview-btn">Button 1A</button>
+            <img src="images/pic1.jpg" class="hover-preview">
+            <p class="sectitle" class="hover-preview"><a href="">Board</a></p>
+          </div>
+
+          <div class="button-wrapper">
+            <button class="preview-btn">Button 2A</button>
+            <img src="images/pic2.jpg" class="hover-preview">
+          </div>
+
+          <div class="button-wrapper">
+            <button class="preview-btn">Button 3A</button>
+            <img src="images/pic3.jpg" class="hover-preview">
+          </div>
+        </div>
+
+        <div class="column">
+          <h3 class="column-title">CADs for Printing</h3>
+
+          <div class="button-wrapper">
+            <button class="preview-btn">Button 1B</button>
+            <img src="images/pic4.jpg" class="hover-preview">
+          </div>
+
+          <div class="button-wrapper">
+            <button class="preview-btn">Button 2B</button>
+            <img src="images/pic5.jpg" class="hover-preview">
+          </div>
+
+          <div class="button-wrapper">
+            <button class="preview-btn">Button 3B</button>
+            <img src="images/pic6.jpg" class="hover-preview">
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="divider"></div>
+
+    <div class="container" id="network">
+      <center><h2 class="sectitle">Temporal Freezing Effect</h2></center>
+      <div class="container">
+        <img src="images/temporal_bottleneck.png"></img>
+      </div>
+    </div>
+    <div class="divider"></div>
+      <div class="container" id="network">
+        <center><h2 class="sectitle">System Architecture</h2></center>
+        <!-- <div class="container">
+          <img src="images/tca_system_architecture.png"></img>
+        </div>
+        <div class="container">
+          <div class="reduced-image">
+            <img src="images/online_vlm_arch.png"></img>
+          </div>
+        </div> -->
+        
+        <div class="bottom-images">
+          <div class="large-part-image">
+            <img src="images/tca_system_architecture.png"></img>
+            <center><p class="caption">System Architecture</p></center>
+          </div>
+          <div class="vert-divider"></div>
+          <div class="small-part-image">
+            <img src="images/online_vlm_arch_2.png"></img>
+            <center><p class="caption">Switching between Lightweight and Reasoning VLM Prompting</p></center>
+          </div>
+        </div>
+
+      </div>
+
+    <div class="divider"></div>
+
+    <center><h2 class="sectitle">Experimental Setup</h2></center>
+    <!-- <div class="img-row" id="connector-images">
+      <div class="container image-container">
+        <img src="images/hardware_setup.png" alt="?" class="centered-image">
+        <p class="caption">Hardware Setup</p>
+      </div>
+      <div class="container image-container">
+        <img src="images/trajectory_command.png" alt="?" class="centered-image">
+        <p class="caption">Connector Task Map</p>
+      </div>
+    </div>
+    <div class="divider"></div> -->
+
+    <div class="bottom-images">
+      <div class="med-part-image">
+        <img src="images/hardware_setup.png"></img>
+        <center><p class="caption">Hardware Setup</p></center>
+      </div>
+      <div class="large-part-image">
+        <img src="images/trajectory_command.png"></img>
+        <center><p class="caption">Connector Tasks</p></center>
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="container" id="result">
+      <center><h2 class="sectitle">Results</h2></center>
+      <div class="table-container">
+          <style>
+              .results-table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin: 20px 0;
+                  font-size: 14px;
+              }
+  
+              .results-table th, .results-table td {
+                  border: 1px solid #ddd;
+                  padding: 8px;
+                  text-align: center;
+              }
+  
+              .results-table th {
+                  background-color: #f5f5f5;
+                  font-weight: bold;
+              }
+  
+              .results-table .highlight {
+                  font-weight: bold;
+              }
+          </style>
+  
+          <table class="results-table">
+              <tr>
+                  <th rowspan="2">Method</th>
+                  <th colspan="4">Connector Removal Success Rates</th>
+                  <!-- <th colspan="4"></th> -->
+                  <!-- <th colspan="4">AA</th>
+                  <th colspan="4">C</th>
+                  <th colspan="4">D</th> -->
+                  <th rowspan="2">Avg. Success Rate</th>
+              </tr>
+              <tr>
+                  <!-- <th>Obj1</th>
+                  <th>Obj2*</th>
+                  <th>Obj3*</th>
+                  <th>Avg.</th>
+                  <th>Obj4</th>
+                  <th>Obj5</th>
+                  <th>Obj6</th>
+                  <th>Avg.</th>
+                  <th>Obj7</th>
+                  <th>Obj8</th>
+                  <th>Obj9</th>
+                  <th>Avg.</th>
+                  <th>Obj10</th>
+                  <th>Obj11*</th>
+                  <th>Obj12*</th>
+                  <th>Avg.</th> -->
+                  <th>D-Sub</th>
+                  <th>USB</th>
+                  <th>BNC</th>
+                  <th>Terminal</th>
+                  <!-- <th>Avg.</th> -->
+              </tr>
+              <tr>
+                  <td>DP-S</td>
+                  <td>0.65</td>
+                  <td>0.60</td>
+                  <td>0.65</td>
+                  <td>0.46</td>
+                  <td>0.76</td>
+                  <!-- <td>0.3</td>
+                  <td>0.1</td>
+                  <td>0.2</td>
+                  <td>0.4</td>
+                  <td>0.4</td>
+                  <td>0.3</td>
+                  <td>0.37</td>
+                  <td>0.4</td>
+                  <td>0.8</td>
+                  <td>0.6</td>
+                  <td>0.6</td>
+                  <td>0.39</td> -->
+              </tr>
+              <tr>
+                  <td>DP-M</td>
+                  <td>0.90</td>
+                  <td>0.79</td>
+                  <td>0.71</td>
+                  <td>0.70</td>
+                  <td>0.88</td>
+                  <!-- <td>0.4</td>
+                  <td>0.3</td>
+                  <td>0.4</td>
+                  <td>0.1</td>
+                  <td>0.4</td>
+                  <td>0.8</td>
+                  <td>0.43</td>
+                  <td>0.6</td>
+                  <td>0.5</td>
+                  <td>0.9</td>
+                  <td>0.67</td>
+                  <td>0.48</td> -->
+              </tr>
+              <tr class="highlight">
+                  <td>DP-M-AM (Ours)</td>
+                  <td>0.90</td>
+                  <td>0.95</td>
+                  <td>0.85</td>
+                  <td>0.95</td>
+                  <td>0.95</td>
+                  <!-- <td>0.9</td> -->
+                  <!-- <td>1.0</td>
+                  <td>0.97</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>0.96</td> -->
+              </tr>
+          </table>
+      </div>
+      
+      <!-- <div class="image-single">
+        <div class="image-case">
+          <img src="images/bar_chart_time.png" alt="Time Taken Comparison">
+          <p class="caption">A comparison of the average time taken for the human
+            demonstration versus robot inference.</p>
+        </div>
+      </div> -->
+
+      <div class="image-single">
+        <div class="image-case">
+          <img src="images/mode_switch.png" alt="Mode Switch" class="small-image">
+          <p class="caption">Action steps taken for mode switching. </p>
+        </div>
+      </div>
+
+      <div class="bottom-images">
+        <div class="image-case">
+          <img src="images/accuracy_online_proposals.png" alt="Online Proposal Accuracy">
+          <p class="caption">Accuracy of online proposals for the next sub-task.</p>
+        </div>
+        <div class="image-case">
+          <img src="images/accuracy_labeling_proposals.png" alt="Labeling Proposal Accuracy">
+          <p class="caption">Sub-task accuracy on trajectory data evaluated across five VLMs.</p>
+        </div>
+      </div>
+      <!-- <div class="image-single">
+        <div class="image-case">
+          <img src="images/failure_force.png" alt="Failure Mode" class="large-image">
+          <p class="caption">Example Force Trend During Failure [Vision-only]</p>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="table-container">
+        <style>
+            .results-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                font-size: 14px;
+            }
+
+            .results-table th, .results-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+
+            .results-table th {
+                background-color: #f5f5f5;
+                font-weight: bold;
+            }
+
+            .results-table .highlight {
+                font-weight: bold;
+            }
+        </style>
+
+        <table class="results-table">
+          <tr>
+            <!-- <th rowspan="2"></th> -->
+            <th colspan="1">Model</th>
+            <!-- <th rowspan="2"></th> -->
+            <th colspan="1">Latency (s)</th>
+          </tr>
+          <tr>
+            <td>GPT-5</td>
+            <td>18.9 &plusmn; 6.6</td>
+          </tr>
+          <tr>
+            <td>GPT-5-nano</td>
+            <td>11.7 &plusmn; 5.9</td>
+          </tr>
+          <tr>
+            <td>Gemini-2.5-pro</td>
+            <td>12.2 &plusmn; 2.0</td>
+          </tr>
+          <tr>
+            <td>Gemini-robotics-1.5</td>
+            <td>12.0 &plusmn; 3.8</td>
+          </tr>
+          <tr>
+            <td>Qwen3-VL</td>
+            <td>38.8 &plusmn; 21.7</td>
+          </tr>
+        </table>
+        <center><p class="caption">Average response latency of Vision-Language models.</p></center>
+    </div>
+    
+    <div class="divider"></div>
+<div class="container" id="bibtex">
+  <center><h2 class="sectitle">BibTeX</h2></center>
+  <pre style="background-color: #f4f4f4; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 14px;">
+<!-- @article{kang2025robotic,
+  author    = {Jeon Ho Kang and Sagar Joshi and Ruopeng Huang and Satyandra K. Gupta},
+  title     = {Robotic Compliant Object Prying Using Diffusion Policy Guided by Vision and Force Observations},
+  journal   = {IEEE Robotics and Automation Letters},
+  year      = {2025},
+  note      = {Accepted for publication. Available on arXiv: arXiv:2503.03998},
+} -->
+  TBD
+  </pre>
+</div>
+
+    
+  </body>
+</html>
