@@ -783,6 +783,88 @@ Imitation Learning for Robotic Disassembly</h1>
 
     <div class="container" id="result">
       <center><h2 class="sectitle">Results</h2></center>
+
+      <div class="bottom-images">
+        <div class="image-case">
+          <img src="images/accuracy_online_proposals.png" alt="Online Proposal Accuracy">
+          <p class="caption">Accuracy of online proposals for the next sub-task.</p>
+        </div>
+        <div class="image-case">
+          <img src="images/accuracy_labeling_proposals.png" alt="Labeling Proposal Accuracy">
+          <p class="caption">Sub-task accuracy on trajectory data evaluated across five VLMs.</p>
+        </div>
+      </div>
+      <!-- <div class="image-single">
+        <div class="image-case">
+          <img src="images/failure_force.png" alt="Failure Mode" class="large-image">
+          <p class="caption">Example Force Trend During Failure [Vision-only]</p>
+        </div>
+      </div> -->
+    </div>
+
+    <div class="table-container">
+        <style>
+            .results-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                font-size: 14px;
+            }
+
+            .results-table th, .results-table td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center;
+            }
+
+            .results-table th {
+                background-color: #f5f5f5;
+                font-weight: bold;
+            }
+
+            .results-table .highlight {
+                font-weight: bold;
+            }
+        </style>
+
+        <table class="results-table">
+          <tr>
+            <!-- <th rowspan="2"></th> -->
+            <th colspan="1">Model</th>
+            <!-- <th rowspan="2"></th> -->
+            <th colspan="1">Latency (s)</th>
+          </tr>
+          <tr>
+            <td>GPT-5</td>
+            <td>18.9 &plusmn; 6.6</td>
+          </tr>
+          <tr>
+            <td>GPT-5-nano</td>
+            <td>11.7 &plusmn; 5.9</td>
+          </tr>
+          <tr>
+            <td>Gemini-2.5-pro</td>
+            <td>12.2 &plusmn; 2.0</td>
+          </tr>
+          <tr>
+            <td>Gemini-robotics-1.5</td>
+            <td>12.0 &plusmn; 3.8</td>
+          </tr>
+          <tr>
+            <td>Qwen3-VL</td>
+            <td>38.8 &plusmn; 21.7</td>
+          </tr>
+        </table>
+        <center><p class="caption">Average response latency of Vision-Language models.</p></center>
+
+      <div class="image-single">
+        <div class="image-case">
+          <!-- <img src="images/mode_switch.png" alt="Mode Switch" class="small-image"> -->
+          <img src="images/mode_switch_new.png" alt="Mode Switch" class="small-image">
+          <p class="caption">Action steps taken for mode switching. </p>
+        </div>
+      </div>
+
       <div class="table-container">
           <style>
               .results-table {
@@ -984,6 +1066,8 @@ Imitation Learning for Robotic Disassembly</h1>
               </tr>
           </table>
       </div>
+      <center><p class="caption">Task success rate comparison.</p></center>
+
       
       <!-- <div class="image-single">
         <div class="image-case">
@@ -992,109 +1076,28 @@ Imitation Learning for Robotic Disassembly</h1>
             demonstration versus robot inference.</p>
         </div>
       </div> -->
-
-      <div class="image-single">
-        <div class="image-case">
-          <!-- <img src="images/mode_switch.png" alt="Mode Switch" class="small-image"> -->
-          <img src="images/mode_switch_new.png" alt="Mode Switch" class="small-image">
-          <p class="caption">Action steps taken for mode switching. </p>
-        </div>
-      </div>
-
-      <div class="bottom-images">
-        <div class="image-case">
-          <img src="images/accuracy_online_proposals.png" alt="Online Proposal Accuracy">
-          <p class="caption">Accuracy of online proposals for the next sub-task.</p>
-        </div>
-        <div class="image-case">
-          <img src="images/accuracy_labeling_proposals.png" alt="Labeling Proposal Accuracy">
-          <p class="caption">Sub-task accuracy on trajectory data evaluated across five VLMs.</p>
-        </div>
-      </div>
-      <!-- <div class="image-single">
-        <div class="image-case">
-          <img src="images/failure_force.png" alt="Failure Mode" class="large-image">
-          <p class="caption">Example Force Trend During Failure [Vision-only]</p>
-        </div>
-      </div> -->
-    </div>
-
-    <div class="table-container">
-        <style>
-            .results-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin: 20px 0;
-                font-size: 14px;
-            }
-
-            .results-table th, .results-table td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: center;
-            }
-
-            .results-table th {
-                background-color: #f5f5f5;
-                font-weight: bold;
-            }
-
-            .results-table .highlight {
-                font-weight: bold;
-            }
-        </style>
-
-        <table class="results-table">
-          <tr>
-            <!-- <th rowspan="2"></th> -->
-            <th colspan="1">Model</th>
-            <!-- <th rowspan="2"></th> -->
-            <th colspan="1">Latency (s)</th>
-          </tr>
-          <tr>
-            <td>GPT-5</td>
-            <td>18.9 &plusmn; 6.6</td>
-          </tr>
-          <tr>
-            <td>GPT-5-nano</td>
-            <td>11.7 &plusmn; 5.9</td>
-          </tr>
-          <tr>
-            <td>Gemini-2.5-pro</td>
-            <td>12.2 &plusmn; 2.0</td>
-          </tr>
-          <tr>
-            <td>Gemini-robotics-1.5</td>
-            <td>12.0 &plusmn; 3.8</td>
-          </tr>
-          <tr>
-            <td>Qwen3-VL</td>
-            <td>38.8 &plusmn; 21.7</td>
-          </tr>
-        </table>
-        <center><p class="caption">Average response latency of Vision-Language models.</p></center>
         
-        <table class="results-table">
-          <tr>
-            <!-- <th rowspan="2"></th> -->
-            <th colspan="1">Model</th>
-            <!-- <th rowspan="2"></th> -->
-            <th colspan="1">Success Rate (%)</th>
-          </tr>
-          <tr>
-            <td>DiT (no Cross-Attention, no CF Loss)</td>
-            <td>43.3</td>
-          </tr>
-          <tr>
-            <td>DiT + CF Loss</td>
-            <td>76.6</td>
-          </tr>
-          <tr>
-            <td><b>iT + CF Loss + Cross-Attention (Ours)</b></td>
-            <td><b>100</b></td>
-          </tr>
-        </table>
-        <center><p class="caption">Ablation: Success rate in object selection upon language command.</p></center>
+      <table class="results-table">
+        <tr>
+          <!-- <th rowspan="2"></th> -->
+          <th colspan="1">Model</th>
+          <!-- <th rowspan="2"></th> -->
+          <th colspan="1">Success Rate (%)</th>
+        </tr>
+        <tr>
+          <td>DiT (no Cross-Attention, no CF Loss)</td>
+          <td>43.3</td>
+        </tr>
+        <tr>
+          <td>DiT + CF Loss</td>
+          <td>76.6</td>
+        </tr>
+        <tr>
+          <td><b>iT + CF Loss + Cross-Attention (Ours)</b></td>
+          <td><b>100</b></td>
+        </tr>
+      </table>
+      <center><p class="caption">Ablation: Success rate in object selection upon language command.</p></center>
     
     </div>
     
