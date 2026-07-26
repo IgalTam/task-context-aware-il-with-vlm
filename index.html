@@ -49,8 +49,9 @@
     </div> -->
 
     <center>
-      <h1 class="title">Vision–Language Grounded Task-Context-Aware
-Imitation Learning for Robotic Disassembly</h1>
+      <!-- <h1 class="title">Vision–Language Grounded Task-Context-Aware
+Imitation Learning for Robotic Disassembly</h1> -->
+        <h1 class="title">Hierarchical Task-Context-Aware Imitation Learning for Robotic Disassembly</h1>
     </center>
 
     <br>
@@ -264,6 +265,34 @@ Imitation Learning for Robotic Disassembly</h1>
           </video>
           <p class="caption">Filler</p>
         </div> -->
+      </div>
+    </div>
+    <div class="divider"></div>
+
+    <div class="container" id="ood-cases">
+      <center><h2 class="sectitle">Generalization to Held-Out Mechanisms</h2></center>
+      <div class="failure-grid">
+        <!-- First Row: 2 Videos -->
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/generalize_hom/power_cable_video.mov" type="video/mp4">
+          </video>
+          <p class="caption">NEMA 5-15P 120V Power Cable</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/generalize_hom/velcro_video.mov" type="video/mp4">
+          </video>
+          <p class="caption">Velcro</p>
+        </div>
+
+        <!-- Fourth Row: Centered Video -->
+        <div class="video-case video-center">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/generalize_hom/magnetic_video.mov" type="video/mp4">
+          </video>
+          <p class="caption">Industrial-Grade Magnet</p>
+        </div>
       </div>
     </div>
     <div class="divider"></div>
@@ -730,8 +759,8 @@ Imitation Learning for Robotic Disassembly</h1>
         </div>
       </div>
       <div class="image-case">
-        <img src="images/BOM/parts.png" class="bom-image">
-        <p class="caption">All Tested Connectors</p>
+        <img src="images/BOM/parts_new.png" class="bom-image">
+        <p class="caption">Diverse types of connectors used to test the generalizability of our approach.</p>
       </div>
 
       <!-- <div id="hw_setup_grid">
@@ -1022,11 +1051,11 @@ Imitation Learning for Robotic Disassembly</h1>
               </tr> -->
               <tr>
                   <td>DP-M-C-CNN</td>
-                  <td>0.</td>
-                  <td>0.</td>
-                  <td>0.</td>
-                  <td>0.</td>
-                  <td>0.</td>
+                  <td>0.1</td>
+                  <td>0.2</td>
+                  <td>0.0</td>
+                  <td>0.45</td>
+                  <td>0.19</td>
                   <!-- <td>0.4</td>
                   <td>0.3</td>
                   <td>0.4</td>
@@ -1042,11 +1071,11 @@ Imitation Learning for Robotic Disassembly</h1>
               </tr>
               <tr>
                   <td>DP-M-T-CF-RB</td>
-                  <td>0.</td>
-                  <td>0.</td>
-                  <td>0.</td>
-                  <td>0.</td>
-                  <td>0.</td>
+                  <td>0.45</td>
+                  <td>0.65</td>
+                  <td>0.55</td>
+                  <td>0.95</td>
+                  <td>0.65</td>
                   <!-- <td>0.4</td>
                   <td>0.3</td>
                   <td>0.4</td>
@@ -1080,7 +1109,7 @@ Imitation Learning for Robotic Disassembly</h1>
                   <td>1.0</td>
                   <td>0.96</td>
               </tr> -->
-              <tr>
+              <tr class="highlight">
                   <td><b>DP-M-T-CF-CNN</b></td>
                   <td>0.95</td>
                   <td>1.00</td>
@@ -1100,8 +1129,28 @@ Imitation Learning for Robotic Disassembly</h1>
                   <td>1.0</td>
                   <td>0.96</td> -->
               </tr>
+              <tr>
+                  <td>DP-M-T-CF-VLM-V1</td>
+                  <td>0.85</td>
+                  <td>0.90</td>
+                  <td>0.60</td>
+                  <td>0.90</td>
+                  <td>0.83</td>
+                  <!-- <td>0.9</td> -->
+                  <!-- <td>1.0</td>
+                  <td>0.97</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>1.0</td>
+                  <td>0.96</td> -->
+              </tr>
               <tr class="highlight">
-                  <td>DP-M-T-CF-VLM</td>
+                  <td>DP-M-T-CF-VLM-V2</td>
                   <td>0.95</td>
                   <td>1.00</td>
                   <td>0.80</td>
@@ -1146,7 +1195,7 @@ Imitation Learning for Robotic Disassembly</h1>
         </tr>
         <tr>
           <td>DiT + CF Loss</td>
-          <td>76.6</td>
+          <td>66.6</td>
         </tr>
         <tr>
           <td><b>iT + CF Loss + Cross-Attention (Ours)</b></td>
@@ -1166,8 +1215,8 @@ Imitation Learning for Robotic Disassembly</h1>
         <p class="caption">CF Hinge Loss behavior during training, compared with MSEs for correct and incorrect action-language pairs.</p>
       </div>
       <div class="image-case">
-        <img src="images/attention_vis.png" alt="Labeling Proposal Accuracy">
-        <p class="caption">Visualization of the attention map during approach by language command.</p>
+        <img src="images/full_attn_plot.png" alt="Labeling Proposal Accuracy">
+        <p class="caption">Visualization of the attention map during approach phase under different language commands.</p>
       </div>
       <div class="image-case">
         <img src="images/attn_plot_horizon.png" alt="Labeling Proposal Accuracy">
