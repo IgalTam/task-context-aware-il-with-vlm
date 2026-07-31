@@ -51,7 +51,7 @@
     <center>
       <!-- <h1 class="title">Vision–Language Grounded Task-Context-Aware
 Imitation Learning for Robotic Disassembly</h1> -->
-        <h1 class="title">Hierarchical Task-Context-Aware Imitation Learning for Robotic Disassembly</h1>
+        <h1 class="title">Vision-Language Grounded Task-Context-Aware Imitation Learning for Robotic Disassembly</h1>
     </center>
 
     <br>
@@ -118,7 +118,7 @@ Imitation Learning for Robotic Disassembly</h1> -->
     <div class="container" id="abstract">
       <center><h2 class="sectitle">Abstract</h2></center>
       <p class="text">
-        Real-world robotic disassembly requires long-horizon execution, in which robots must perform ordered sequences of manipulation skills across multiple parts within a single scene. These settings often involve multiple valid task goals that demand distinct physical behaviors, making it difficult for standard imitation policies to infer the intended skill from raw observations alone. This ambiguity is further compounded by pauses that commonly occur during transitions between subtasks in long-horizon demonstrations, causing behavior cloning policies to reproduce inactive states rather than progress toward task completion. We show that incorporating task context through language alleviates these challenges by providing explicit structure for skill sequencing and an ability to associate the language-specified task with the relevant target object in the visual scene. Although our method does not require object-level image annotations, our multi-modal cross-attention architecture, trained with a counterfactual (CF) loss, enables the policy to ground language commands in the appropriate visual target among multiple candidate objects. This grounding produces attention maps that consistently focus on task-relevant object features, allowing the policy to better resolve target-selection ambiguity in multi-task scenes.
+        Real-world robotic disassembly requires long-horizon execution, where robots must perform ordered sequences of manipulation tasks across multiple parts within a single scene. Multiple valid task goals and diverse assembly configurations make it difficult for imitation policies to infer the intended skill from raw observations alone, particularly when training data cannot cover the combinatorial diversity of real-world configurations and part geometries. We show that incorporating task context through language alleviates these challenges by providing explicit structure for skill selection and associating language-specified tasks with their corresponding manipulation targets in the visual scene. The proposed framework combines hierarchical task selection with task-context-aware imitation learning to ground language instructions in spatial visual representations for robotic disassembly. The resulting framework generalizes across diverse connector geometries and assembly configurations without requiring explicit object annotations. Our method improves end-to-end task success by 35% over the baseline diffusion policy and by 75% over the previous task-context-aware baseline.
       </p>
     </div>
     <div class="divider"></div>
@@ -270,7 +270,7 @@ Imitation Learning for Robotic Disassembly</h1> -->
     <div class="divider"></div>
 
     <div class="container" id="ood-cases">
-      <center><h2 class="sectitle">Generalization to Held-Out Mechanisms</h2></center>
+      <center><h2 class="sectitle">Generalization to Held-Out Mechanisms and Assembly Configs</h2></center>
       <div class="failure-grid">
         <!-- First Row: 2 Videos -->
         <div class="video-case">
@@ -285,13 +285,17 @@ Imitation Learning for Robotic Disassembly</h1> -->
           </video>
           <p class="caption">Velcro</p>
         </div>
-
-        <!-- Fourth Row: Centered Video -->
-        <div class="video-case video-center">
+        <div class="video-case">
           <video controls playsinline autoplay muted loop>
             <source src="videos/generalize_hom/magnetic_video.mov" type="video/mp4">
           </video>
           <p class="caption">Industrial-Grade Magnet</p>
+        </div>
+        <div class="video-case">
+          <video controls playsinline autoplay muted loop>
+            <source src="videos/generalize_hom/usb_hub_video.mov" type="video/mp4">
+          </video>
+          <p class="caption">USB Hub</p>
         </div>
       </div>
     </div>
@@ -759,8 +763,8 @@ Imitation Learning for Robotic Disassembly</h1> -->
         </div>
       </div>
       <div class="image-case">
-        <img src="images/BOM/parts_new.png" class="bom-image">
-        <p class="caption">Diverse types of connectors used to test the generalizability of our approach.</p>
+        <img src="images/BOM/parts_new2.png" class="bom-image">
+        <p class="caption">Diverse types of connectors and assembly configurations used to test the generalizability of our approach.</p>
       </div>
 
       <!-- <div id="hw_setup_grid">
@@ -912,12 +916,12 @@ Imitation Learning for Robotic Disassembly</h1> -->
             }
         </style>
 
-        <table class="results-table">
-          <tr>
+        <!-- <table class="results-table">
+          <tr> -->
             <!-- <th rowspan="2"></th> -->
-            <th colspan="1">Model</th>
+            <!-- <th colspan="1">Model</th> -->
             <!-- <th rowspan="2"></th> -->
-            <th colspan="1">Latency (s)</th>
+            <!-- <th colspan="1">Latency (s)</th>
           </tr>
           <tr>
             <td>GPT-5</td>
@@ -940,7 +944,7 @@ Imitation Learning for Robotic Disassembly</h1> -->
             <td>38.8 &plusmn; 21.7</td>
           </tr>
         </table>
-        <center><p class="caption">Average response latency of Vision-Language models.</p></center>
+        <center><p class="caption">Average response latency of Vision-Language models.</p></center> --> -->
 
       <div class="image-single">
         <div class="image-case">
@@ -1051,9 +1055,9 @@ Imitation Learning for Robotic Disassembly</h1> -->
               </tr> -->
               <tr>
                   <td>DP-M-C-CNN</td>
-                  <td>0.1</td>
-                  <td>0.2</td>
-                  <td>0.0</td>
+                  <td>0.10</td>
+                  <td>0.20</td>
+                  <td>0.00</td>
                   <td>0.45</td>
                   <td>0.19</td>
                   <!-- <td>0.4</td>
@@ -1173,7 +1177,33 @@ Imitation Learning for Robotic Disassembly</h1> -->
       </div>
       <center><p class="caption">Task success rate comparison.</p></center>
 
-      
+      <table class="results-table">
+          <tr>
+            <!-- <th rowspan="2"></th> -->
+            <th colspan="1">Method</th>
+            <!-- <th rowspan="2"></th> -->
+            <th colspan="1">USB Hub</th>
+            <th colspan="1">Power Cable</th>
+            <th colspan="1">Magnetic</th>
+            <th colspan="1">Velcro</th>
+          </tr>
+          <tr>
+            <td>CNN</td>
+            <td>0.40</td>
+            <td>0.50</td>
+            <td>0.30</td>
+            <td>0.00</td>
+          </tr>
+          <tr class="highlight">
+            <td>VLM-V2</td>
+            <td>0.90</td>
+            <td>0.90</td>
+            <td>0.70</td>
+            <td>0.60</td>
+          </tr>
+        </table>
+        <center><p class="caption">Task success rates on held-out connector mechanisms and configurations.</p></center>
+
       <!-- <div class="image-single">
         <div class="image-case">
           <img src="images/bar_chart_time.png" alt="Time Taken Comparison">
